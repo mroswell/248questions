@@ -1251,7 +1251,7 @@ const questions = [
         id: 157,
         category: "biodistribution",
         subcategory: "lnp",
-        question: "Following from Question 156, Given that, according to a paper co-authored by a founder of Moderna, (67) LNP particle size is a major determinant of distribution, and also according to FDA, \"because biodistribution and retention is a property of the LNP rather than the mRNA,\" how does this the study support the authorization of Pfizer product
+        question: "Following from Question 156, Given that, according to a paper co-authored by a founder of Moderna, (67) LNP particle size is a major determinant of distribution, and also according to FDA, \"because biodistribution and retention is a property of the LNP rather than the mRNA,\" how does this the study support the authorization of Pfizer product",
         page: 50,
         section: "10.1"
     },
