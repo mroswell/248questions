@@ -171,31 +171,31 @@ section {
 
 /* Category-specific colors */
 .question-category[data-category="manufacturing"] {
-    background-color: rgba(52, 152, 219, 0.3); /* Blue */
+    background-color: rgba(52, 152, 219, 0.5); /* Blue */
 }
 
 .question-category[data-category="dna"] {
-    background-color: rgba(231, 76, 60, 0.3); /* Red */
+    background-color: rgba(231, 76, 60, 0.4); /* Red */
 }
 
 .question-category[data-category="safety"] {
-    background-color: rgba(46, 204, 113, 0.3); /* Green */
+    background-color: rgba(46, 204, 113, 0.5); /* Green */
 }
 
 .question-category[data-category="regulatory"] {
-    background-color: rgba(155, 89, 182, 0.3); /* Purple */
+    background-color: rgba(155, 89, 182, 0.4); /* Purple */
 }
 
 .question-category[data-category="genotoxicity"] {
-    background-color: rgba(230, 126, 34, 0.3); /* Orange */
+    background-color: rgba(230, 126, 34, 0.4); /* Orange */
 }
 
 .question-category[data-category="biodistribution"] {
-    background-color: rgba(52, 73, 94, 0.3); /* Dark blue-gray */
+    background-color: rgba(52, 73, 94, 0.4); /* Dark blue-gray */
 }
 
 .question-category[data-category="frameshift"] {
-    background-color: rgba(149, 165, 166, 0.3); /* Gray */
+    background-color: rgba(149, 165, 166, 0.6); /* Gray */
 }
 
 .question-text {

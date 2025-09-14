@@ -163,18 +163,33 @@ function displayPaginatedQuestions() {
         // Process the question text to convert Question references to links
         const processedQuestion = linkifyQuestionReferences(q.question);
 
+        // Format the question number display
+        let questionLabel;
+        if (q.id === 'bonus-1') {
+            questionLabel = 'Bonus Question 1';
+        } else if (q.id === 'bonus-2') {
+            questionLabel = 'Bonus Question 2';
+        } else {
+            questionLabel = `Question ${q.id}`;
+        }
+
+        // Don't show section/page for bonus questions
+        const metaInfo = (q.id === 'bonus-1' || q.id === 'bonus-2')
+            ? ''
+            : `<div class="question-meta">
+                <span>Section ${q.section}</span>
+                <span>Page ${q.page}</span>
+            </div>`;
+
         questionDiv.innerHTML = `
             <div class="question-header">
                 <span class="question-number">
-                    <a href="?q=${q.id}" class="question-link" title="Link to Question ${q.id}">Question ${q.id}</a>
+                    <a href="?q=${q.id}" class="question-link" title="Link to ${questionLabel}">${questionLabel}</a>
                 </span>
                 <span class="question-category" data-category="${q.category}">${formatCategory(q.category)}</span>
             </div>
             <p class="question-text">${processedQuestion}</p>
-            <div class="question-meta">
-                <span>Section ${q.section}</span>
-                <span>Page ${q.page}</span>
-            </div>
+            ${metaInfo}
         `;
         container.appendChild(questionDiv);
     });

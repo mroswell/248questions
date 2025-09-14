@@ -1982,5 +1982,21 @@ const questions = [
         question: "Will FDA acknowledge the biological reality of these products and regulate them as gene therapies?",
         page: 77,
         section: "15"
+    },
+    {
+        id: "bonus-1",
+        category: "regulatory",
+        subcategory: "response",
+        question: "What resources will you apply to answering these questions?",
+        page: 103,
+        section: "Bonus"
+    },
+    {
+        id: "bonus-2",
+        category: "regulatory",
+        subcategory: "response",
+        question: "By what means will you be sharing the answers?",
+        page: 103,
+        section: "Bonus"
     }
 ];
