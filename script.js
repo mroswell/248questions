@@ -292,6 +292,15 @@ function goToPage(page) {
 function updateURL() {
     const params = new URLSearchParams();
 
+    // Check if there's a question parameter in the current URL
+    const currentParams = new URLSearchParams(window.location.search);
+    const questionId = currentParams.get('q');
+
+    // Keep the question parameter if it exists
+    if (questionId) {
+        params.set('q', questionId);
+    }
+
     if (currentPage > 1) {
         params.set('page', currentPage);
     }
@@ -315,12 +324,23 @@ function updateURL() {
 
 // Clear filters
 function clearFilters() {
+    // Preserve the question parameter if it exists
+    const currentParams = new URLSearchParams(window.location.search);
+    const questionId = currentParams.get('q');
+
     document.getElementById('searchBox').value = '';
     document.getElementById('categoryFilter').value = '';
     document.getElementById('perPageFilter').value = 'all';
     questionsPerPage = -1;
     currentPage = 1;
     filterQuestions();
+
+    // If there was a question parameter, make sure it stays in the URL
+    if (questionId) {
+        const params = new URLSearchParams();
+        params.set('q', questionId);
+        window.history.replaceState({}, '', `?${params.toString()}`);
+    }
 }
 
 // Format category name
