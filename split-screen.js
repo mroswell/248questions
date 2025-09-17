@@ -32,10 +32,10 @@ function displayQuestions() {
         return `
             <div class="question-item" id="question-${q.id}">
                 <div class="question-header">
-                    <a href="?q=${q.id}#question-${q.id}" class="question-number-link">
+                    <a href="#" onclick="scrollToQuestion(${q.id}); return false;" class="question-number-link">
                         <strong>Question ${q.id}:</strong>
                     </a>
-                    <span class="question-category">${q.category}</span>
+                    <span class="question-category" data-category="${q.category}">${q.category}</span>
                 </div>
                 <div class="question-text">${q.question}</div>
                 <div class="question-meta">
