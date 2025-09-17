@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FDA COVID-19 Vaccine Questions - Split View</title>
+    <meta name="description" content="248 scientific questions regarding COVID-19 vaccine manufacturing, safety testing, and regulatory oversight">
+    <link rel="stylesheet" href="split-screen.css">
+</head>
+<body>
+    <div class="split-container">
+        <!-- Left Panel: Questions -->
+        <div class="left-panel">
+            <header class="compact-header">
+                <h1>248 Questions</h1>
+                <p class="subtitle">FDA COVID-19 Vaccine Inquiry</p>
+                <nav class="compact-nav">
+                    <a href="index.html">Home</a>
+                    <a href="split-screen.html" class="active">Split Screen</a>
+                    <a href="about.html">About</a>
+                    <a href="download.html">Download</a>
+                </nav>
+            </header>
+
+            <div class="filters">
+                <input type="text" id="searchBox" placeholder="Search...">
+
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="manufacturing">Manufacturing</option>
+                    <option value="dna">DNA Contamination</option>
+                    <option value="safety">Safety Studies</option>
+                    <option value="regulatory">Regulatory</option>
+                    <option value="genotoxicity">Genotoxicity</option>
+                    <option value="biodistribution">Biodistribution</option>
+                    <option value="frameshift">Frameshift</option>
+                </select>
+
+                <button id="clearFilters">Clear</button>
+                <span id="questionCount"></span>
+            </div>
+
+            <div id="questionsList"></div>
+        </div>
+
+        <!-- Right Panel: Document -->
+        <div class="right-panel">
+            <iframe id="documentFrame" src="document_linked.html"></iframe>
+        </div>
+    </div>
+
+    <script src="questions.js"></script>
+    <script src="split-screen.js"></script>
+</body>
+</html>
