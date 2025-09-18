@@ -77,7 +77,9 @@ body {
 /* Filters */
 .filters {
     padding: 15px;
-    background: white;
+    margin: 15px;
+    background: #f0f0f0;
+    border-radius: 8px;
     border-bottom: 1px solid #dee2e6;
     flex-shrink: 0;
 }
@@ -287,10 +289,76 @@ body {
         height: 40vh;
         border-right: none;
         border-bottom: 2px solid #dee2e6;
+        overflow-y: auto; /* Ensure scrollable */
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Make questions list scrollable on mobile */
+    #questionsList {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0; /* Important for flex child scrolling */
     }
 
     .right-panel {
         width: 100%;
         height: 60vh;
+    }
+
+    /* Compact mobile navigation */
+    .compact-nav {
+        display: block;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        overflow-x: auto;
+        padding: 5px 0;
+    }
+
+    .compact-nav a {
+        display: inline;
+        padding: 2px 5px;
+        margin: 0;
+        font-size: 0.75rem;
+    }
+
+    .compact-nav a:not(:last-child)::after {
+        content: " | ";
+        color: rgba(255, 255, 255, 0.5);
+        margin: 0 5px;
+    }
+
+    .compact-nav a.active {
+        font-weight: bold;
+        background: none;
+        text-decoration: underline;
+    }
+
+    /* Smaller header on mobile */
+    .compact-header {
+        padding: 10px;
+    }
+
+    .compact-header h1 {
+        font-size: 1rem;
+        margin-bottom: 3px;
+    }
+
+    .compact-header .subtitle {
+        font-size: 0.7rem;
+        margin-bottom: 5px;
+    }
+
+    /* Compact filters on mobile */
+    .filters {
+        padding: 10px;
+    }
+
+    .filters input,
+    .filters select,
+    .filters button {
+        padding: 5px;
+        font-size: 0.8rem;
+        margin-bottom: 5px;
     }
 }

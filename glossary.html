@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossary - FDA COVID-19 Vaccine Questions</title>
+    <meta name="description" content="Glossary of terms and acronyms used in the 248 scientific questions regarding COVID-19 vaccine manufacturing">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .glossary-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .glossary-search {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+
+        .glossary-search input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .glossary-list {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .glossary-item {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .glossary-item:last-child {
+            border-bottom: none;
+        }
+
+        .glossary-term {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1rem;
+            display: inline;
+        }
+
+        .glossary-definition {
+            color: #555;
+            line-height: 1.6;
+            display: inline;
+            margin-left: 0.5rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Scientific Questions on COVID-19 Vaccines</h1>
+        <p class="subtitle">248 Questions for FDA on Manufacturing, Safety Testing, and Regulatory Oversight</p>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="split-screen.html">Split Screen</a>
+            <a href="glossary.html" class="active">Glossary</a>
+            <a href="about.html">About</a>
+            <a href="support.html">Support</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="glossary">
+            <h2>Glossary of Terms</h2>
+
+            <div class="glossary-container">
+                <div class="glossary-search">
+                    <input type="text" id="glossarySearch" placeholder="Search for terms or acronyms...">
+                </div>
+
+                <div class="glossary-list" id="glossaryList">
+                    <!-- Terms will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 David Wiseman, PhD, MRPharmS & Maria Gutschi, BScPhm, PharmD</p>
+        <p class="disclaimer">This website presents scientific questions and analysis. It is not medical advice.</p>
+    </footer>
+
+    <script>
+        const glossaryTerms = [
+            { term: "ACE2 (ACE-2, ACE2R)", definition: "Angiotensin-converting enzyme 2, the receptor used by the SARS-CoV-2 spike protein for cell entry" },
+            { term: "ACIP", definition: "Advisory Committee on Immunization Practices (CDC)" },
+            { term: "ADME", definition: "Absorption, Distribution, Metabolism, and Excretion" },
+            { term: "BLA", definition: "A Biologics License Application, a request for permission to introduce a biologic product into interstate commerce" },
+            { term: "BMJ", definition: "The British Medical Journal" },
+            { term: "bp", definition: "Base pairs, a unit of DNA/RNA length" },
+            { term: "CBER", definition: "The Center for Biologics Evaluation and Research, which is part of the FDA" },
+            { term: "CDC", definition: "The Centers for Disease Control and Prevention" },
+            { term: "CFR", definition: "The Code of Federal Regulations" },
+            { term: "cGMP", definition: "Current Good Manufacturing Practice" },
+            { term: "CHMP", definition: "The Committee for Medicinal Products for Human Use, which is part of the EMA" },
+            { term: "CI", definition: "Confidence interval" },
+            { term: "CMV", definition: "Cytomegalovirus" },
+            { term: "COMIRNATY", definition: "The brand name for the Pfizer-BioNTech COVID-19 vaccine" },
+            { term: "COVID-19", definition: "Coronavirus disease 2019" },
+            { term: "CpG", definition: "A Cytosine-phosphate-guanine DNA motif" },
+            { term: "DAMP", definition: "A damage-associated molecular pattern" },
+            { term: "DNA", definition: "Deoxyribonucleic acid" },
+            { term: "DNase (DNAse)", definition: "Deoxyribonuclease, an enzyme that degrades DNA" },
+            { term: "DP", definition: "Drug Product" },
+            { term: "DS", definition: "Drug Substance" },
+            { term: "dsRNA", definition: "Double-stranded RNA" },
+            { term: "E. coli", definition: "Escherichia coli" },
+            { term: "EMA", definition: "European Medicines Agency" },
+            { term: "ERD", definition: "Enhanced respiratory disease" },
+            { term: "EUA", definition: "Emergency Use Authorization" },
+            { term: "FDA", definition: "Food and Drug Administration" },
+            { term: "FOIA", definition: "The Freedom of Information Act" },
+            { term: "GLP", definition: "Good Laboratory Practice" },
+            { term: "GMP", definition: "Good Manufacturing Practice" },
+            { term: "GT", definition: "Gene Therapy" },
+            { term: "hACE2", definition: "Human ACE2" },
+            { term: "HERV", definition: "Human endogenous retrovirus" },
+            { term: "HHS", definition: "Health and Human Services" },
+            { term: "hMPV", definition: "Human metapneumovirus" },
+            { term: "HSV", definition: "Herpes simplex virus" },
+            { term: "ICH", definition: "The International Council for Harmonisation" },
+            { term: "IFN-α", definition: "Interferon alpha" },
+            { term: "IND", definition: "Investigational New Drug" },
+            { term: "IVT", definition: "In vitro transcription" },
+            { term: "kb", definition: "Kilobase (1000 base pairs)" },
+            { term: "L1 (LINE-1)", definition: "A Long Interspersed Nuclear Element, a family of 'Transposable Elements' or 'jumping genes' that can transpose from one genomic region to another" },
+            { term: "LNP", definition: "Lipid nanoparticle" },
+            { term: "LTFU", definition: "Long-term follow-up" },
+            { term: "MA", definition: "Marketing Authorization" },
+            { term: "MAH", definition: "Marketing Authorization Holder" },
+            { term: "MedDRA", definition: "Medical Dictionary for Regulatory Activities" },
+            { term: "MHRA", definition: "Medicines and Healthcare products Regulatory Agency (UK)" },
+            { term: "MIE", definition: "Molecular initiating event" },
+            { term: "mM", definition: "Millimolar (concentration unit)" },
+            { term: "modRNA", definition: "Nucleoside-modified messenger RNA" },
+            { term: "mRNA", definition: "Messenger RNA" },
+            { term: "N1-methylpseudouridine", definition: "A modified nucleoside engineered into RNA to evade innate immune attack" },
+            { term: "NEJM", definition: "The New England Journal of Medicine" },
+            { term: "ng", definition: "Nanogram" },
+            { term: "NIH", definition: "National Institutes of Health" },
+            { term: "NPC", definition: "Nuclear Pore Complex" },
+            { term: "NRA", definition: "National Regulatory Authority" },
+            { term: "ORF", definition: "Open reading frame" },
+            { term: "ori", definition: "Origin of replication" },
+            { term: "OTAT", definition: "The Office of Tissues and Advanced Therapies, which is part of the FDA" },
+            { term: "OVRR", definition: "Office of Vaccines Research and Review, which is part of CBER at FDA" },
+            { term: "PBS", definition: "Phosphate buffered saline" },
+            { term: "PCR", definition: "Polymerase chain reaction" },
+            { term: "PEG", definition: "Polyethylene glycol" },
+            { term: "PEG2000-DMG", definition: "Polyethylene glycol 2000 dimyristoyl glycerol" },
+            { term: "PIV3", definition: "Parainfluenza virus type 3" },
+            { term: "PK", definition: "Pharmacokinetics, also referred to as biodistribution and ADME" },
+            { term: "poly(A)", definition: "Polyadenylate tail" },
+            { term: "PPQ", definition: "Process Performance Qualification" },
+            { term: "PRR", definition: "Proportional Reporting Ratio" },
+            { term: "qPCR", definition: "Quantitative PCR" },
+            { term: "RBD", definition: "Receptor binding domain" },
+            { term: "RCT", definition: "Randomized controlled trial" },
+            { term: "REC", definition: "Recommendation" },
+            { term: "RNP", definition: "Ribonucleoprotein" },
+            { term: "RWE", definition: "Real World Evidence" },
+            { term: "S-2P", definition: "Spike protein with 2 proline substitutions" },
+            { term: "SARS-CoV-2", definition: "Severe acute respiratory syndrome coronavirus 2" },
+            { term: "SD", definition: "Sprague Dawley, a strain of rat" },
+            { term: "SEC", definition: "The Securities and Exchange Commission" },
+            { term: "SIUU", definition: "Scientific Information on Unapproved Uses" },
+            { term: "SM-102", definition: "An ionizable cationic lipid used in the Moderna vaccine" },
+            { term: "SO", definition: "Specific Obligation" },
+            { term: "SPIKEVAX", definition: "The brand name for the Moderna COVID-19 vaccine" },
+            { term: "SV40", definition: "Simian virus 40" },
+            { term: "TGA", definition: "Therapeutic Goods Administration (Australia)" },
+            { term: "TLR", definition: "Toll-like receptor" },
+            { term: "TMPRSS2", definition: "Transmembrane protease, serine 2" },
+            { term: "Tris", definition: "Tris(hydroxymethyl)aminomethane, a buffer" },
+            { term: "UTR", definition: "Untranslated region" },
+            { term: "UV", definition: "Ultraviolet" },
+            { term: "VAERS", definition: "The Vaccine Adverse Event Reporting System" },
+            { term: "VRBPAC", definition: "The Vaccines and Related Biological Products Advisory Committee, an expert advisory subcommittee to the FDA" },
+            { term: "WB", definition: "Western Blot" },
+            { term: "WHO", definition: "World Health Organization" },
+            { term: "WT", definition: "Wild-type" },
+            { term: "μg", definition: "Microgram" }
+        ];
+
+        function displayGlossary(searchTerm = '') {
+            const glossaryList = document.getElementById('glossaryList');
+
+            const filteredTerms = glossaryTerms.filter(item =>
+                item.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.definition.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            if (filteredTerms.length === 0) {
+                glossaryList.innerHTML = '<div class="no-results">No terms found matching your search.</div>';
+                return;
+            }
+
+            const html = filteredTerms.map(item => `
+                <div class="glossary-item">
+                    <span class="glossary-term">${item.term}:</span>
+                    <span class="glossary-definition">${item.definition}</span>
+                </div>
+            `).join('');
+
+            glossaryList.innerHTML = html;
+        }
+
+        // Initialize display
+        displayGlossary();
+
+        // Setup search
+        document.getElementById('glossarySearch').addEventListener('input', function() {
+            displayGlossary(this.value);
+        });
+    </script>
+</body>
+</html>

@@ -19,8 +19,22 @@ header {
 }
 
 header h1 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     margin-bottom: 0.5rem;
+    text-decoration: none;
+    border: none;
+}
+
+/* Remove underlines from u tags in document content */
+u {
+    text-decoration: none;
+}
+
+/* Section headings */
+h2 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
 }
 
 .subtitle {
@@ -70,8 +84,11 @@ section {
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
+    padding: 1.5rem;
     flex-wrap: wrap;
     align-items: center;
+    background: #f0f0f0;
+    border-radius: 8px;
 }
 
 #searchBox {
