@@ -56,7 +56,7 @@ nav a {
 }
 
 nav a:hover {
-    background-color: rgba(255,255,255,0.1);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 main {
@@ -70,7 +70,7 @@ section {
     padding: 2rem;
     margin-bottom: 2rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Wider container for desktop screens */
@@ -171,6 +171,7 @@ section {
         background-color: rgba(52, 152, 219, 0.2);
         transform: scale(1.01);
     }
+
     100% {
         background-color: #fafafa;
         transform: scale(1);
@@ -188,31 +189,38 @@ section {
 
 /* Category-specific colors */
 .question-category[data-category="manufacturing"] {
-    background-color: rgba(52, 152, 219, 0.5); /* Blue */
+    background-color: rgba(52, 152, 219, 0.5);
+    /* Blue */
 }
 
 .question-category[data-category="dna"] {
-    background-color: rgba(231, 76, 60, 0.4); /* Red */
+    background-color: rgba(231, 76, 60, 0.4);
+    /* Red */
 }
 
 .question-category[data-category="safety"] {
-    background-color: rgba(46, 204, 113, 0.5); /* Green */
+    background-color: rgba(46, 204, 113, 0.5);
+    /* Green */
 }
 
 .question-category[data-category="regulatory"] {
-    background-color: rgba(155, 89, 182, 0.4); /* Purple */
+    background-color: rgba(155, 89, 182, 0.4);
+    /* Purple */
 }
 
 .question-category[data-category="genotoxicity"] {
-    background-color: rgba(230, 126, 34, 0.4); /* Orange */
+    background-color: rgba(230, 126, 34, 0.4);
+    /* Orange */
 }
 
 .question-category[data-category="biodistribution"] {
-    background-color: rgba(52, 73, 94, 0.4); /* Dark blue-gray */
+    background-color: rgba(52, 73, 94, 0.4);
+    /* Dark blue-gray */
 }
 
 .question-category[data-category="frameshift"] {
-    background-color: rgba(149, 165, 166, 0.6); /* Gray */
+    background-color: rgba(149, 165, 166, 0.6);
+    /* Gray */
 }
 
 .question-text {
@@ -257,7 +265,7 @@ footer {
 
 /* Navigation active state */
 nav a.active {
-    background-color: rgba(255,255,255,0.2);
+    background-color: rgba(255, 255, 255, 0.2);
     font-weight: 600;
 }
 
@@ -337,7 +345,7 @@ nav a.active {
 
 .category-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .category-card h3 {
@@ -355,7 +363,7 @@ nav a.active {
 }
 
 .paper-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-style: italic;
     color: #2c3e50;
     margin: 1rem 0;
@@ -410,7 +418,7 @@ nav a.active {
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .resource-card h3 {

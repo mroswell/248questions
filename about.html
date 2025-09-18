@@ -27,18 +27,28 @@
             gap: 3rem;
             margin-top: 2rem;
         }
-        .column-left, .column-right {
+        .column-left {
+            flex: 0 0 40%;
+            font-size: 0.9rem;
+        }
+        .column-right {
             flex: 1;
         }
         .column-left ul, .column-right ul {
             margin-left: 1.5rem;
         }
+        .column-right h3, .column-left h3 {
+            margin-top: 2rem;
+        }
+        .column-right h2 + p {
+            margin-top: 1rem;
+        }
         .download-card {
             background: white;
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         .download-btn {
             display: inline-block;
