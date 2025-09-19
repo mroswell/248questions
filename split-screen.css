@@ -286,12 +286,17 @@ body {
     .left-panel {
         width: 100%;
         max-width: none;
-        height: 40vh;
+        height: 50vh;
         border-right: none;
         border-bottom: 2px solid #dee2e6;
         overflow-y: auto; /* Ensure scrollable */
         display: flex;
         flex-direction: column;
+    }
+
+    /* Hide category filter on mobile to save space */
+    #categoryFilter {
+        display: none;
     }
 
     /* Make questions list scrollable on mobile */
@@ -303,7 +308,7 @@ body {
 
     .right-panel {
         width: 100%;
-        height: 60vh;
+        height: 50vh;
     }
 
     /* Compact mobile navigation */
@@ -326,12 +331,16 @@ body {
         content: " | ";
         color: rgba(255, 255, 255, 0.5);
         margin: 0 5px;
+        text-decoration: none !important;
+        display: inline-block;
     }
 
     .compact-nav a.active {
         font-weight: bold;
         background: none;
-        text-decoration: underline;
+        text-decoration: none;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+        padding-bottom: 1px;
     }
 
     /* Smaller header on mobile */
