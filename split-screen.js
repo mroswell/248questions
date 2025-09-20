@@ -4,12 +4,37 @@ let allQuestions = questions; // From questions.js
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    const categoryParam = urlParams.get('category');
+    const questionId = urlParams.get('q');
+
+    // Set initial filter values from URL
+    if (searchParam && document.getElementById('searchBox')) {
+        document.getElementById('searchBox').value = searchParam;
+    }
+    if (categoryParam && document.getElementById('categoryFilter')) {
+        document.getElementById('categoryFilter').value = categoryParam;
+    }
+
     displayQuestions();
     setupEventListeners();
     updateQuestionCount();
 
     // Setup message listener for cross-frame communication
     window.addEventListener('message', handleDocumentMessage);
+
+    // If there's a specific question ID, scroll to it after a short delay
+    if (questionId) {
+        setTimeout(() => {
+            const questionElement = document.getElementById(`question-${questionId}`);
+            if (questionElement) {
+                questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                questionElement.classList.add('highlighted');
+            }
+        }, 100);
+    }
 });
 
 // Display questions in the left panel
@@ -132,16 +157,40 @@ function updateQuestionCount() {
     }
 }
 
+// Update URL with current filter parameters
+function updateURLParams() {
+    const searchValue = document.getElementById('searchBox').value;
+    const categoryValue = document.getElementById('categoryFilter').value;
+
+    const params = new URLSearchParams();
+
+    if (searchValue) {
+        params.set('search', searchValue);
+    }
+    if (categoryValue) {
+        params.set('category', categoryValue);
+    }
+
+    // Update URL without reloading the page
+    const newURL = params.toString()
+        ? `${window.location.pathname}?${params.toString()}`
+        : window.location.pathname;
+
+    window.history.replaceState({}, '', newURL);
+}
+
 // Setup event listeners
 function setupEventListeners() {
     // Search box
     document.getElementById('searchBox').addEventListener('input', function() {
         displayQuestions();
+        updateURLParams();
     });
 
     // Category filter
     document.getElementById('categoryFilter').addEventListener('change', function() {
         displayQuestions();
+        updateURLParams();
     });
 
     // Clear filters button
@@ -149,6 +198,7 @@ function setupEventListeners() {
         document.getElementById('searchBox').value = '';
         document.getElementById('categoryFilter').value = '';
         displayQuestions();
+        updateURLParams();
     });
 }
 
