@@ -161,6 +161,19 @@ section {
     border-bottom-style: solid;
 }
 
+.footnote-ref {
+    color: #e74c3c;
+    text-decoration: none;
+    border-bottom: 1px dotted #e74c3c;
+    font-weight: normal;
+    font-size: 0.95em;
+}
+
+.footnote-ref:hover {
+    color: #c0392b;
+    border-bottom-style: solid;
+}
+
 /* Highlight effect for when jumping to a specific question */
 .question-item.highlight {
     animation: highlightFade 3s ease-out;

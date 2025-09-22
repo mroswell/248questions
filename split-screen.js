@@ -2,6 +2,115 @@
 let filteredQuestions = [];
 let allQuestions = questions; // From questions.js
 
+// Process question text for split screen - handles footnotes
+function processQuestionTextForSplitScreen(text) {
+    // Process footnote references with tokens to preserve them through HTML escaping
+    let processed = text.replace(/\(([^)]+)\)/g, (match, content) => {
+        // Skip if content starts with common non-footnote patterns
+        if (/^(p\s*\d|page|section|eg|e\.g\.|i\.e\.|see|cf|note|table|figure|\d{4})/i.test(content)) {
+            return match;
+        }
+
+        // Skip if it contains URLs or email patterns
+        if (/https?:\/\/|www\.|@/.test(content)) {
+            return match;
+        }
+
+        // Skip if it's a date pattern
+        if (/^(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}$/i.test(content)) {
+            return match;
+        }
+
+        // Skip if it's a scientific notation or chemical formula
+        if (/[A-Z]{2,}|µg|mg|ml|nm|\d+x\d+/.test(content)) {
+            return match;
+        }
+
+        // Process if it looks like footnote numbers
+        if (/^\d+(?:\s*,\s*\d+)*(?:\s*-\s*\d+)?$/.test(content.trim())) {
+            const parts = content.split(/,/).map(s => s.trim());
+            const linked = parts.map(part => {
+                if (part.includes('-')) {
+                    const [start, end] = part.split('-').map(s => s.trim());
+                    return `__FREF_${start}__-__FREF_${end}__`;
+                }
+                return `__FREF_${part}__`;
+            }).join(', ');
+            return '(' + linked + ')';
+        }
+
+        return match;
+    });
+
+    // Escape HTML
+    const div = document.createElement('div');
+    div.textContent = processed;
+    let escaped = div.innerHTML;
+
+    // Replace tokens with actual links
+    escaped = escaped.replace(/__FREF_(\d+)__/g, (match, refNum) => {
+        return `<a href="#" onclick="scrollToReference(${refNum}); return false;" class="footnote-ref" title="Go to reference ${refNum}">${refNum}</a>`;
+    });
+
+    return escaped;
+}
+
+// Convert footnote references in parentheses to clickable links (kept for compatibility)
+function linkifyFootnotes(text) {
+    // Process parentheses content
+    return text.replace(/\(([^)]+)\)/g, (match, content) => {
+        // Skip if content starts with common non-footnote patterns
+        if (/^(p\s*\d|page|section|eg|e\.g\.|i\.e\.|see|cf|note|table|figure|\d{4})/i.test(content)) {
+            return match;
+        }
+
+        // Skip if it contains URLs or email patterns
+        if (/https?:\/\/|www\.|@/.test(content)) {
+            return match;
+        }
+
+        // Skip if it's a date pattern (e.g., "December 2020", "2021")
+        if (/^(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}$/i.test(content)) {
+            return match;
+        }
+
+        // Skip if it's a scientific notation or chemical formula
+        if (/[A-Z]{2,}|µg|mg|ml|nm|\d+x\d+/.test(content)) {
+            return match;
+        }
+
+        // Process if it looks like footnote numbers
+        if (/^\d+(?:\s*,\s*\d+)*(?:\s*-\s*\d+)?$/.test(content.trim())) {
+            return '(' + processFootnoteNumbers(content) + ')';
+        }
+
+        // Process mixed content like "eg (23,24)" - extract just the numbers
+        const nestedMatch = content.match(/\((\d+(?:\s*,\s*\d+)*(?:\s*-\s*\d+)?)\)/);
+        if (nestedMatch) {
+            const beforeNested = content.substring(0, content.indexOf('('));
+            const afterNested = content.substring(content.indexOf(')') + 1);
+            return '(' + beforeNested + '(' + processFootnoteNumbers(nestedMatch[1]) + ')' + afterNested + ')';
+        }
+
+        return match;
+    });
+}
+
+// Helper function to process footnote numbers and create links
+function processFootnoteNumbers(numbersStr) {
+    const parts = numbersStr.split(/,/).map(s => s.trim());
+
+    return parts.map(part => {
+        // Handle ranges like "96-98"
+        if (part.includes('-')) {
+            const [start, end] = part.split('-').map(s => s.trim());
+            return `<a href="#" onclick="scrollToReference(${start}); return false;" class="footnote-ref" title="Go to reference ${start}">${start}</a>-<a href="#" onclick="scrollToReference(${end}); return false;" class="footnote-ref" title="Go to reference ${end}">${end}</a>`;
+        }
+        // Single number
+        return `<a href="#" onclick="scrollToReference(${part}); return false;" class="footnote-ref" title="Go to reference ${part}">${part}</a>`;
+    }).join(', ');
+}
+
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     // Get URL parameters
@@ -35,6 +144,126 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 100);
     }
+
+    // Setup iframe load handler for injecting navigation script
+    const iframe = document.getElementById('documentFrame');
+    iframe.addEventListener('load', function() {
+        // Inject navigation script into the document
+        try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+            // Create and inject the navigation script
+            const script = iframeDoc.createElement('script');
+            script.textContent = `
+                // Listen for scroll requests from parent
+                window.addEventListener('message', function(event) {
+                    console.log('Iframe received message:', event.data);
+                    if (event.data.type === 'scrollToReference') {
+                        console.log('Looking for element with id: ref-' + event.data.refNumber);
+                        // Find the reference element by ID
+                        const refElement = document.getElementById('ref-' + event.data.refNumber);
+                        console.log('Found element:', refElement);
+
+                        if (refElement) {
+                            refElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+
+                            // Highlight the reference briefly
+                            const originalBg = refElement.style.backgroundColor;
+                            refElement.style.backgroundColor = '#ffeb3b';
+                            setTimeout(() => {
+                                refElement.style.backgroundColor = originalBg;
+                            }, 2000);
+                        } else {
+                            console.log('Reference element not found for ref-' + event.data.refNumber);
+                        }
+                    } else if (event.data.type === 'scrollToSection') {
+                        // Find all h2, h3, h4 elements that might contain the section number
+                        const headings = document.querySelectorAll('h1, h2, h3, h4');
+                        let targetElement = null;
+
+                        for (let heading of headings) {
+                            // Check if heading text contains the section number
+                            if (heading.textContent.includes(event.data.section)) {
+                                targetElement = heading;
+                                break;
+                            }
+                        }
+
+                        // If not found in headings, search in strong tags
+                        if (!targetElement) {
+                            const strongs = document.querySelectorAll('strong');
+                            for (let strong of strongs) {
+                                if (strong.textContent.includes(event.data.section)) {
+                                    targetElement = strong;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+
+                            // Highlight the section briefly
+                            const originalBg = targetElement.style.backgroundColor;
+                            targetElement.style.backgroundColor = '#ffeb3b';
+                            setTimeout(() => {
+                                targetElement.style.backgroundColor = originalBg;
+                            }, 2000);
+                        }
+                    } else if (event.data.type === 'scrollToQuestion') {
+                        // Find the question link in the document
+                        const questionLinks = document.querySelectorAll('.question-link');
+                        let targetElement = null;
+
+                        for (let link of questionLinks) {
+                            if (link.getAttribute('data-question-id') === String(event.data.questionId)) {
+                                targetElement = link;
+                                break;
+                            }
+                        }
+
+                        if (targetElement) {
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+
+                            // Send message back to parent to highlight question
+                            if (!event.data.fromLeftPanel) {
+                                window.parent.postMessage({
+                                    type: 'scrollToQuestion',
+                                    questionId: event.data.questionId
+                                }, '*');
+                            }
+                        }
+                    }
+                });
+
+                // Handle clicks on Q{num} links
+                document.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('question-link')) {
+                        event.preventDefault();
+                        const questionId = event.target.getAttribute('data-question-id');
+
+                        // Send message to parent to highlight question
+                        window.parent.postMessage({
+                            type: 'scrollToQuestion',
+                            questionId: parseInt(questionId)
+                        }, '*');
+                    }
+                });
+            `;
+            iframeDoc.body.appendChild(script);
+        } catch (e) {
+            console.log('Could not inject script into iframe - likely due to same-origin policy');
+        }
+    });
 });
 
 // Display questions in the left panel
@@ -62,7 +291,7 @@ function displayQuestions() {
                     </a>
                     <span class="question-category" data-category="${q.category}">${q.category}</span>
                 </div>
-                <div class="question-text">${q.question}</div>
+                <div class="question-text">${processQuestionTextForSplitScreen(q.question)}</div>
                 <div class="question-meta">
                     ${q.section ? `<span class="section-link" onclick="scrollToSection('${q.section}', ${q.id})">Section ${q.section}</span>` : ''}
                     ${q.section ? `<span class="section-link" onclick="scrollToQuestion(${q.id})">Q${q.id}</span>` : ''}
@@ -74,6 +303,18 @@ function displayQuestions() {
 
     questionsList.innerHTML = html;
     updateQuestionCount();
+}
+
+// Scroll to a reference in the document
+function scrollToReference(refNumber) {
+    console.log('scrollToReference called with:', refNumber);
+    const iframe = document.getElementById('documentFrame');
+
+    // Send message to iframe to scroll to reference
+    iframe.contentWindow.postMessage({
+        type: 'scrollToReference',
+        refNumber: refNumber
+    }, '*');
 }
 
 // Scroll to section in the document
@@ -202,77 +443,3 @@ function setupEventListeners() {
     });
 }
 
-// Wait for iframe to load and inject navigation script
-document.addEventListener('DOMContentLoaded', function() {
-    const iframe = document.getElementById('documentFrame');
-
-    iframe.addEventListener('load', function() {
-        // Inject navigation script into the document
-        try {
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-
-            // Create and inject the navigation script
-            const script = iframeDoc.createElement('script');
-            script.textContent = `
-                // Listen for scroll requests from parent
-                window.addEventListener('message', function(event) {
-                    if (event.data.type === 'scrollToSection') {
-                        // Find all h2, h3, h4 elements that might contain the section number
-                        const headings = document.querySelectorAll('h1, h2, h3, h4');
-                        let targetElement = null;
-
-                        for (let heading of headings) {
-                            // Check if heading text contains the section number
-                            if (heading.textContent.includes(event.data.section)) {
-                                targetElement = heading;
-                                break;
-                            }
-                        }
-
-                        // If not found in headings, search in strong tags
-                        if (!targetElement) {
-                            const strongs = document.querySelectorAll('strong');
-                            for (let strong of strongs) {
-                                if (strong.textContent.includes(event.data.section)) {
-                                    targetElement = strong;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (targetElement) {
-                            targetElement.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'start'
-                            });
-
-                            // Highlight the section briefly
-                            const originalBg = targetElement.style.backgroundColor;
-                            targetElement.style.backgroundColor = '#ffeb3b';
-                            setTimeout(() => {
-                                targetElement.style.backgroundColor = originalBg;
-                            }, 2000);
-                        }
-                    }
-                });
-
-                // Handle clicks on Q{num} links
-                document.addEventListener('click', function(event) {
-                    if (event.target.classList.contains('question-link')) {
-                        event.preventDefault();
-                        const questionId = event.target.getAttribute('data-question-id');
-
-                        // Send message to parent to highlight question
-                        window.parent.postMessage({
-                            type: 'scrollToQuestion',
-                            questionId: parseInt(questionId)
-                        }, '*');
-                    }
-                });
-            `;
-            iframeDoc.body.appendChild(script);
-        } catch (e) {
-            console.log('Could not inject script into iframe - likely due to same-origin policy');
-        }
-    });
-});

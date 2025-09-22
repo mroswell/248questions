@@ -160,8 +160,8 @@ function displayPaginatedQuestions() {
         questionDiv.className = 'question-item';
         questionDiv.id = `question-${q.id}`; // Add ID for anchoring
 
-        // Process the question text to convert Question references to links
-        const processedQuestion = linkifyQuestionReferences(q.question);
+        // Process the question text to convert Question references and footnotes to links
+        let processedQuestion = processQuestionText(q.question);
 
         // Format the question number display
         let questionLabel;
@@ -372,7 +372,75 @@ function formatCategory(category) {
     return categoryNames[category] || category;
 }
 
-// Convert Question references in text to clickable links
+// Process question text - handles both Question references and footnotes
+function processQuestionText(text) {
+    // First, we need to handle the text in segments to preserve HTML safety
+    // We'll mark our replacements with special tokens that won't be escaped
+
+    // Step 1: Replace Question references with tokens
+    let processed = text.replace(/\bQuestions?\s+(\d+)/gi, (match, id) => {
+        return `__QREF_${id}_${match}__`;
+    });
+
+    // Step 2: Replace footnote references with tokens
+    processed = processed.replace(/\(([^)]+)\)/g, (match, content) => {
+        console.log('Found parentheses:', match, 'Content:', content);
+        // Skip if content starts with common non-footnote patterns
+        if (/^(p\s*\d|page|section|eg|e\.g\.|i\.e\.|see|cf|note|table|figure|\d{4})/i.test(content)) {
+            return match;
+        }
+
+        // Skip if it contains URLs or email patterns
+        if (/https?:\/\/|www\.|@/.test(content)) {
+            return match;
+        }
+
+        // Skip if it's a date pattern
+        if (/^(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}$/i.test(content)) {
+            return match;
+        }
+
+        // Skip if it's a scientific notation or chemical formula
+        if (/[A-Z]{2,}|µg|mg|ml|nm|\d+x\d+/.test(content)) {
+            return match;
+        }
+
+        // Process if it looks like footnote numbers
+        if (/^\d+(?:\s*,\s*\d+)*(?:\s*-\s*\d+)?$/.test(content.trim())) {
+            console.log('  -> Processing as reference numbers');
+            const parts = content.split(/,/).map(s => s.trim());
+            const linked = parts.map(part => {
+                if (part.includes('-')) {
+                    const [start, end] = part.split('-').map(s => s.trim());
+                    return `__FREF_${start}__-__FREF_${end}__`;
+                }
+                return `__FREF_${part}__`;
+            }).join(', ');
+            return '(' + linked + ')';
+        }
+        console.log('  -> Not a reference number pattern');
+
+        return match;
+    });
+
+    // Step 3: Escape HTML
+    const div = document.createElement('div');
+    div.textContent = processed;
+    let escaped = div.innerHTML;
+
+    // Step 4: Replace tokens with actual links
+    escaped = escaped.replace(/__QREF_(\d+)_([^_]+)__/g, (match, id, text) => {
+        return `<a href="?q=${id}" class="question-ref" title="Go to Question ${id}">${text}</a>`;
+    });
+
+    escaped = escaped.replace(/__FREF_(\d+)__/g, (match, refNum) => {
+        return `<a href="#ref-${refNum}" class="footnote-ref" title="Go to reference ${refNum}">${refNum}</a>`;
+    });
+
+    return escaped;
+}
+
+// Convert Question references in text to clickable links (kept for backward compatibility)
 function linkifyQuestionReferences(text) {
     // Escape HTML first to prevent XSS
     const escapeHtml = (str) => {
@@ -395,4 +463,60 @@ function linkifyQuestionReferences(text) {
         // For complex cases, just return the match as-is (could be enhanced later)
         return match;
     });
+}
+
+// Convert footnote references in parentheses to clickable links
+function linkifyFootnotes(text) {
+    // Process parentheses content
+    return text.replace(/\(([^)]+)\)/g, (match, content) => {
+        // Skip if content starts with common non-footnote patterns
+        if (/^(p\s*\d|page|section|eg|e\.g\.|i\.e\.|see|cf|note|table|figure|\d{4})/i.test(content)) {
+            return match;
+        }
+
+        // Skip if it contains URLs or email patterns
+        if (/https?:\/\/|www\.|@/.test(content)) {
+            return match;
+        }
+
+        // Skip if it's a date pattern (e.g., "December 2020", "2021")
+        if (/^(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}$/i.test(content)) {
+            return match;
+        }
+
+        // Skip if it's a scientific notation or chemical formula
+        if (/[A-Z]{2,}|µg|mg|ml|nm|\d+x\d+/.test(content)) {
+            return match;
+        }
+
+        // Process if it looks like footnote numbers
+        if (/^\d+(?:\s*,\s*\d+)*(?:\s*-\s*\d+)?$/.test(content.trim())) {
+            return '(' + processFootnoteNumbers(content) + ')';
+        }
+
+        // Process mixed content like "eg (23,24)" - extract just the numbers
+        const nestedMatch = content.match(/\((\d+(?:\s*,\s*\d+)*(?:\s*-\s*\d+)?)\)/);
+        if (nestedMatch) {
+            const beforeNested = content.substring(0, content.indexOf('('));
+            const afterNested = content.substring(content.indexOf(')') + 1);
+            return '(' + beforeNested + '(' + processFootnoteNumbers(nestedMatch[1]) + ')' + afterNested + ')';
+        }
+
+        return match;
+    });
+}
+
+// Helper function to process footnote numbers and create links
+function processFootnoteNumbers(numbersStr) {
+    const parts = numbersStr.split(/,/).map(s => s.trim());
+
+    return parts.map(part => {
+        // Handle ranges like "96-98"
+        if (part.includes('-')) {
+            const [start, end] = part.split('-').map(s => s.trim());
+            return `<a href="#ref-${start}" class="footnote-ref" title="Go to reference ${start}">${start}</a>-<a href="#ref-${end}" class="footnote-ref" title="Go to reference ${end}">${end}</a>`;
+        }
+        // Single number
+        return `<a href="#ref-${part}" class="footnote-ref" title="Go to reference ${part}">${part}</a>`;
+    }).join(', ');
 }
