@@ -4,11 +4,34 @@ let allQuestions = questions; // From questions.js
 
 // Process question text for split screen - handles footnotes
 function processQuestionTextForSplitScreen(text) {
+    // First, handle "section X.Y.Z" patterns outside parentheses
+    let processed = text.replace(/\bsection\s+(\d+(?:\.\d+)*)\b/gi, (match, sectionNum) => {
+        return `section __SREF_${sectionNum}__`;
+    });
+
     // Process footnote references with tokens to preserve them through HTML escaping
-    let processed = text.replace(/\(([^)]+)\)/g, (match, content) => {
-        // Skip if content starts with common non-footnote patterns
-        if (/^(p\s*\d|page|section|eg|e\.g\.|i\.e\.|see|cf|note|table|figure|\d{4})/i.test(content)) {
+    processed = processed.replace(/\(([^)]+)\)/g, (match, content) => {
+        // Skip if content starts with common non-footnote patterns, but handle "see" with section numbers
+        if (/^(p\s*\d|page|section|eg|e\.g\.|i\.e\.|cf|note|table|figure|\d{4})/i.test(content)) {
             return match;
+        }
+
+        // Handle "see" with section numbers like "see 11.1" - use token replacement
+        if (/^see\s+(\d+(?:\.\d+)*)$/i.test(content.trim())) {
+            const sectionMatch = content.match(/^see\s+(\d+(?:\.\d+)*)$/i);
+            if (sectionMatch) {
+                const sectionNum = sectionMatch[1];
+                return `(see __SREF_${sectionNum}__)`;
+            }
+        }
+
+        // Handle "section" with section numbers like "section 3.6" - use token replacement
+        if (/^section\s+(\d+(?:\.\d+)*)$/i.test(content.trim())) {
+            const sectionMatch = content.match(/^section\s+(\d+(?:\.\d+)*)$/i);
+            if (sectionMatch) {
+                const sectionNum = sectionMatch[1];
+                return `(section __SREF_${sectionNum}__)`;
+            }
         }
 
         // Skip if it contains URLs or email patterns
@@ -50,6 +73,11 @@ function processQuestionTextForSplitScreen(text) {
     // Replace tokens with actual links
     escaped = escaped.replace(/__FREF_(\d+)__/g, (match, refNum) => {
         return `<a href="#" onclick="scrollToReference(${refNum}); return false;" class="footnote-ref" title="Go to reference ${refNum}">${refNum}</a>`;
+    });
+
+    // Replace section reference tokens with actual links
+    escaped = escaped.replace(/__SREF_([^_]+)__/g, (match, sectionNum) => {
+        return `<a href="#" onclick="scrollToSection('${sectionNum}'); return false;" class="section-ref" title="Go to section ${sectionNum}">${sectionNum}</a>`;
     });
 
     return escaped;
@@ -160,8 +188,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log('Iframe received message:', event.data);
                     if (event.data.type === 'scrollToReference') {
                         console.log('Looking for element with id: ref-' + event.data.refNumber);
-                        // Find the reference element by ID
-                        const refElement = document.getElementById('ref-' + event.data.refNumber);
+                        // Find the reference element by ID - always prioritize the bibliography section
+                        const allRefs = document.querySelectorAll('#ref-' + event.data.refNumber);
+                        let refElement = null;
+                        
+                        if (allRefs.length > 0) {
+                            // Always use the last occurrence (bibliography section)
+                            refElement = allRefs[allRefs.length - 1];
+                            console.log('Found ' + allRefs.length + ' references, using the last one (bibliography)');
+                        }
+                        
                         console.log('Found element:', refElement);
 
                         if (refElement) {

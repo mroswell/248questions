@@ -75,7 +75,7 @@ const questions = [
         id: 10,
         category: "regulatory",
         subcategory: "compliance",
-        question: "Did the provision of EUA product to patients who were counseled that these products reduce the risk of death or serious outcomes, violate the provider agreement, which requires that the provider must confine representations to those consistent with the contents of the Fact Sheet (eg (23,24)) ?",
+        question: "Did the provision of EUA product to patients who were counseled that these products reduce the risk of death or serious outcomes, violate the provider agreement, which requires that the provider must confine representations to those consistent with the contents of the Fact Sheet - eg (23,24) ?",
         page: 6,
         section: "2.1"
     },
@@ -171,7 +171,7 @@ const questions = [
         id: 22,
         category: "regulatory",
         subcategory: "compliance",
-        question: "Did the provision of EUA product to patients who were counseled that these products were safe and effective for use in pregnancy and lactation violate the provider agreement, which requires that the provider must confine representations to those consistent with the contents of the Fact Sheet (eg (23,24)) ?",
+        question: "Did the provision of EUA product to patients who were counseled that these products were safe and effective for use in pregnancy and lactation violate the provider agreement, which requires that the provider must confine representations to those consistent with the contents of the Fact Sheet - eg (23,24) ?",
         page: 9,
         section: "2.2"
     },
@@ -1091,7 +1091,7 @@ const questions = [
         id: 137,
         category: "dna",
         subcategory: "sv40",
-        question: "Given the absence of a nuclear member in mitosis (4.2), and the ability of the SV40 sequence to act as a nuclear localization signal, (69,127) did FDA challenge Pfizer on the assertion that \"residual DNA […] has a very low likelihood of reaching the nucleus.\" Please provide.",
+        question: "Given the absence of a nuclear member in mitosis (see 4.2), and the ability of the SV40 sequence to act as a nuclear localization signal, (69,127) did FDA challenge Pfizer on the assertion that \"residual DNA […] has a very low likelihood of reaching the nucleus.\" Please provide.",
         page: 39,
         section: "7.2"
     },
@@ -1555,7 +1555,7 @@ const questions = [
         id: 195,
         category: "genotoxicity",
         subcategory: "formulation",
-        question: "Given the disclosure (11.4.1) that the sizes of LNPs in a CMV vaccine examined in a biodistribution study were smaller than those found in mRNA-1273, despite misleading statements suggesting that they were the same, what assurances can FDA give that the formulations of the Zika and luciferase mRNA vaccines subjected to genotoxicity tests were identical to mRNA-1273, other than in the modRNA sequence coding for the target antigen/ luciferase?",
+        question: "Given the disclosure (see 11.4.1) that the sizes of LNPs in a CMV vaccine examined in a biodistribution study were smaller than those found in mRNA-1273, despite misleading statements suggesting that they were the same, what assurances can FDA give that the formulations of the Zika and luciferase mRNA vaccines subjected to genotoxicity tests were identical to mRNA-1273, other than in the modRNA sequence coding for the target antigen/ luciferase?",
         page: 67,
         section: "12.3"
     },
@@ -1683,7 +1683,7 @@ const questions = [
         id: 211,
         category: "safety",
         subcategory: "formulation",
-        question: "Given the disclosure (11.4.1) that the sizes of LNPs in a CMV vaccine examined in a biodistribution study were smaller than those found in mRNA-1273, despite misleading statements suggesting that they were the same, what assurances can FDA give that the formulations of the Zika and luciferase mRNA vaccines subjected to genotoxicity tests were identical to mRNA-1273, other than in the modRNA sequence coding for the target antigen/ luciferase?",
+        question: "Given the disclosure (see 11.4.1) that the sizes of LNPs in a CMV vaccine examined in a biodistribution study were smaller than those found in mRNA-1273, despite misleading statements suggesting that they were the same, what assurances can FDA give that the formulations of the Zika and luciferase mRNA vaccines subjected to genotoxicity tests were identical to mRNA-1273, other than in the modRNA sequence coding for the target antigen/ luciferase?",
         page: 68,
         section: "12.3"
     },
